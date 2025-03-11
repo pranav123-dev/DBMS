@@ -1,0 +1,230 @@
+create database orders;
+use orders;
+create table order_details(order_id int primary key,product_name varchar(20) not null,order_no int not null,order_date date not null);
+ desc order_details;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| order_id     | int         | NO   | PRI | NULL    |       |
+| product_name | varchar(20) | NO   |     | NULL    |       |
+| order_no     | int         | NO   |     | NULL    |       |
+| order_date   | date        | NO   |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+insert into order_details values(1,"Laptop",234,'2000-03-02');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into order_details values(2,"Desktop",456,'2000-04-09');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into order_details values(3,"Keyboard",457,'2004-05-10');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into order_details values(4,"Mouse",500,'2003-12-15');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into order_details values(5,"Antivirus",501,'2002-11-24');
+Query OK, 1 row affected (0.01 sec)
+select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        3 | Keyboard     |      457 | 2004-05-10 |
+|        4 | Mouse        |      500 | 2003-12-15 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
++----------+--------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+insert into order_details(order_id,product_name,order_no,order_date)values(7,"Printer",463,'2004-02-05');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        3 | Keyboard     |      457 | 2004-05-10 |
+|        4 | Mouse        |      500 | 2003-12-15 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
+|        6 | Joystick     |      487 | 2006-09-12 |
+|        7 | Printer      |      463 | 2004-02-05 |
++----------+--------------+----------+------------+
+7 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        3 | Keyboard     |      457 | 2004-05-10 |
+|        4 | Mouse        |      500 | 2003-12-15 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
++----------+--------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from order_details where order_no in(3,4);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        3 | Keyboard     |      457 | 2004-05-10 |
+|        4 | Mouse        |      500 | 2003-12-15 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
++----------+--------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        3 | Keyboard     |      457 | 2004-05-10 |
+|        4 | Mouse        |      500 | 2003-12-15 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
++----------+--------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> delete from order_details where order_no in(457,500);
+Query OK, 2 rows affected (0.02 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
++----------+--------------+----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
++----------+--------------+----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> set autocommit=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> savepoint svp_update;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> update order_details set order_no=599,product_name="Scanner" where order_id=5;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        5 | Scanner      |      599 | 2002-11-24 |
++----------+--------------+----------+------------+
+3 rows in set (0.00 sec)
+select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        5 | Scanner      |      599 | 2002-11-24 |
++----------+--------------+----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into order_details(order_id,product_name,order_no,order_date)values(6,"Monitor",345,'1976-04-08');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into order_details(order_id,product_name,order_no,order_date)values(7,"Printer",466,'1998-03-16');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> savepoint delt;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delete from order_details where product_name="Desktop";
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        5 | Scanner      |      599 | 2002-11-24 |
+|        6 | Monitor      |      345 | 1976-04-08 |
+|        7 | Printer      |      466 | 1998-03-16 |
++----------+--------------+----------+------------+
+4 rows in set (0.00 sec)
+
+rollback to savepoint svp_update;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from order_details;
++----------+--------------+----------+------------+
+| order_id | product_name | order_no | order_date |
++----------+--------------+----------+------------+
+|        1 | Laptop       |      234 | 2000-03-02 |
+|        2 | Desktop      |      456 | 2000-04-09 |
+|        5 | Antivirus    |      501 | 2002-11-24 |
++----------+--------------+----------+------------+
+3 rows in set (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+set autocommit=1;
+Query OK, 0 rows affected (0.00 sec)
+
+create user'new_user'@'localhost'identified by'password';
+Query OK, 0 rows affected (0.04 sec)
+
+grant all privileges on*.*to'new_user'@'localhost'with grant option;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show grants for 'new_user'@'localhost';
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Grants for new_user@localhost                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CREATE TABLESPACE, CREATE ROLE, DROP ROLE ON *.* TO `new_user`@`localhost` WITH GRANT OPTION                                                                                                                                                                                                                                                                                                                                                                                     |
+| GRANT APPLICATION_PASSWORD_ADMIN,AUDIT_ABORT_EXEMPT,AUDIT_ADMIN,AUTHENTICATION_POLICY_ADMIN,BACKUP_ADMIN,BINLOG_ADMIN,BINLOG_ENCRYPTION_ADMIN,CLONE_ADMIN,CONNECTION_ADMIN,ENCRYPTION_KEY_ADMIN,FIREWALL_EXEMPT,FLUSH_OPTIMIZER_COSTS,FLUSH_STATUS,FLUSH_TABLES,FLUSH_USER_RESOURCES,GROUP_REPLICATION_ADMIN,GROUP_REPLICATION_STREAM,INNODB_REDO_LOG_ARCHIVE,INNODB_REDO_LOG_ENABLE,PASSWORDLESS_USER_ADMIN,PERSIST_RO_VARIABLES_ADMIN,REPLICATION_APPLIER,REPLICATION_SLAVE_ADMIN,RESOURCE_GROUP_ADMIN,RESOURCE_GROUP_USER,ROLE_ADMIN,SENSITIVE_VARIABLES_OBSERVER,SERVICE_CONNECTION_ADMIN,SESSION_VARIABLES_ADMIN,SET_USER_ID,SHOW_ROUTINE,SYSTEM_USER,SYSTEM_VARIABLES_ADMIN,TABLE_ENCRYPTION_ADMIN,TELEMETRY_LOG_ADMIN,XA_RECOVER_ADMIN ON *.* TO `new_user`@`localhost` WITH GRANT OPTION |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> revoke drop,delete on*.* from'new_user'@'localhost';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show grants for'new_user'@'localhost';
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Grants for new_user@localhost   
+
+
+
